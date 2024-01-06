@@ -31,7 +31,7 @@ object QrLogic {
           case euros :: cents :: Nil if cents == null =>
             ZIO.succeed(ParsedAmount(s"EUR$euros"))
           case euros :: seperatorAndCents :: Nil =>
-            ZIO.succeed(ParsedAmount(s"EURO$euros.${seperatorAndCents.tail}"))
+            ZIO.succeed(ParsedAmount(s"EUR$euros.${seperatorAndCents.tail}"))
           case _ =>
             ZIO.fail(ParseError("Inlezen bedrag ging fout"))
 

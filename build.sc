@@ -11,8 +11,10 @@ object api extends ScalaModule {
   def zioJsonVersion = "0.6.2"
   override def ivyDeps = Agg(
     ivy"dev.zio::zio:$zioCoreVersion",
+    ivy"dev.zio::zio-streams:$zioCoreVersion",
     ivy"dev.zio::zio-http:$zioHttpVersion",
     ivy"dev.zio::zio-json:$zioJsonVersion",
+    ivy"com.softwaremill.sttp.tapir::tapir-zio-http-server:1.9.6",
     ivy"com.github.kenglxn.QRGen:javase:3.0.1",
   )
 
@@ -22,12 +24,3 @@ object api extends ScalaModule {
     super.repositoriesTask() ++ Seq(jitPackRepository)
   }
 }
-
-//object frontend extends ScalaJSModule {
-//  override def scalaVersion = projectScalaVersion
-//  override def scalaJSVersion = "1.15.0"
-//
-//  override def ivyDeps = Agg(
-//    ivy"com.raquo::laminar::16.0.0",
-//  )
-//}
