@@ -21,4 +21,5 @@ object ApiMain extends ZIOAppDefault:
 
 
   override val run: ZIO[ZIOAppArgs & Scope, Any, Any] =
-    Server.serve(app).provide(Server.default)
+    ZIO.attemptBlockingIO(println(s"Application available at: http://localhost:8080")) *>
+      Server.serve(app).provide(Server.default)

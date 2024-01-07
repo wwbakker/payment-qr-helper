@@ -55,7 +55,7 @@ object QrLogic {
       qr.setIban(belastingdienstIban)
       qr.setAmount(parsedAmount.value)
       qr.setReference(parsedRef.value)
-      QRCode.from(qr).svg()
+      QRCode.from(qr).withSize(500, 500).svg()
     }.logError("Failed to create QR").catchAll(_ => ZIO.fail(InternalError("Aanmaken QR code mislukt door interne fout.")))
     
   def loonBelasting(unparsedAmount: String, unparsedRef: String): ZIO[Any, ServiceError, File] =
