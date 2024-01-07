@@ -17,6 +17,18 @@ object Endpoints {
       .get
       .out(streamTextBody(ZioStreams)(CodecFormat.TextHtml(), None))
 
+  val mainJs: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], Any with ZioStreams] =
+    endpoint
+      .get
+      .in("main.js")
+      .out(streamTextBody(ZioStreams)(CodecFormat.TextJavascript(), None))
+
+  val mainJsMap: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], Any with ZioStreams] =
+    endpoint
+      .get
+      .in("main.js.map")
+      .out(streamTextBody(ZioStreams)(CodecFormat.Json(), None))
+
   val generateLoonbelastingQr: Endpoint[Unit, String, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
     endpoint
       .get

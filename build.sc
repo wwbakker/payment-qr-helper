@@ -1,6 +1,5 @@
 import coursier.maven.MavenRepository
-import mill._
-import scalalib._
+import mill._, scalalib._, scalajslib._
 
 val projectScalaVersion = "3.3.1"
 
@@ -23,4 +22,23 @@ object api extends ScalaModule {
   override def repositoriesTask = T.task {
     super.repositoriesTask() ++ Seq(jitPackRepository)
   }
+
+  override def resources = T {
+    os.makeDir(T.dest / "webapp")
+    val jsPath = frontend.fastLinkJS().dest.path
+    // Move main.js[.map]into the proper filesystem position
+    // in the resource folder for the web server code to pick up
+    os.copy(jsPath / "main.js", T.dest / "webapp" / "main.js")
+    os.copy(jsPath / "main.js.map", T.dest / "webapp" / "main.js.map")
+    super.resources() ++ Seq(PathRef(T.dest))
+  }
+}
+
+object frontend extends ScalaJSModule {
+  override def scalaVersion = projectScalaVersion
+  override def scalaJSVersion = "1.15.0"
+
+  override def ivyDeps = Agg(
+    ivy"com.raquo::laminar::16.0.0",
+  )
 }
