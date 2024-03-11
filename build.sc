@@ -1,10 +1,17 @@
 import coursier.maven.MavenRepository
 import mill._, scalalib._, scalajslib._
 
-val projectScalaVersion = "3.3.1"
+trait AppScalaModule extends ScalaModule {
+  def scalaVersion = "3.3.1"
+}
 
-object api extends ScalaModule {
-  override def scalaVersion = projectScalaVersion
+trait AppScalaJSModule extends AppScalaModule with ScalaJSModule {
+  def scalaJSVersion = "1.15.0"
+}
+
+object api extends AppScalaModule {
+  override def moduleDeps: Seq[JavaModule] = Seq(shared.jvm)
+
   def zioCoreVersion = "2.0.19"
   def zioHttpVersion = "3.0.0-RC4"
   def zioJsonVersion = "0.6.2"
@@ -34,11 +41,17 @@ object api extends ScalaModule {
   }
 }
 
-object frontend extends ScalaJSModule {
-  override def scalaVersion = projectScalaVersion
-  override def scalaJSVersion = "1.15.0"
+object frontend extends AppScalaJSModule {
+  override def moduleDeps: Seq[JavaModule] = Seq(shared.js)
 
   override def ivyDeps = Agg(
     ivy"com.raquo::laminar::16.0.0",
   )
+}
+
+object shared extends Module {
+  trait SharedModule extends AppScalaModule with PlatformScalaModule
+
+  object jvm extends SharedModule
+  object js extends SharedModule with AppScalaJSModule
 }

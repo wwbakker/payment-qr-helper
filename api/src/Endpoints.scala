@@ -1,5 +1,5 @@
 import sttp.capabilities.zio.ZioStreams
-import sttp.model.MediaType
+import sttp.model.{MediaType, StatusCode}
 import sttp.tapir.ztapir.*
 import sttp.tapir.{CodecFormat, Endpoint, Schema}
 import zio.*
@@ -29,12 +29,14 @@ object Endpoints {
       .in("main.js.map")
       .out(streamTextBody(ZioStreams)(CodecFormat.Json(), None))
 
-  val generateLoonbelastingQr: Endpoint[Unit, String, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
+  val generateLoonbelastingQr: Endpoint[Unit, (String, String), String, stream.Stream[Throwable, Byte], ZioStreams] =
     endpoint
       .get
       .in("loonbelasting-qr.svg")
       .in(query[String]("betalingskenmerk"))
+      .in(query[String]("bedrag"))
       .out(svgStreamBody)
+      .errorOut(stringBody)
       .name("loonbelasting-qr.svg")
 
 }

@@ -10,8 +10,8 @@ object ApiMain extends ZIOAppDefault:
   private val app: HttpApp[Any] =
     ZioHttpInterpreter().toHttp(
       List(
-        generateLoonbelastingQr.zServerLogic(betalingskenmerk =>
-          QrLogic.loonBelasting("1860.00", betalingskenmerk).mapBoth(_ => (), ZStream.fromFile(_))
+        generateLoonbelastingQr.zServerLogic((betalingskenmerk, bedrag) =>
+          QrLogic.loonBelasting(bedrag, betalingskenmerk).mapBoth(e => e.friendlyText, ZStream.fromFile(_))
         ),
         mainJs.zServerLogic(_ => ZIO.succeed(ZStream.fromResource("webapp/main.js"))),
         mainJsMap.zServerLogic(_ => ZIO.succeed(ZStream.fromResource("webapp/main.js.map"))),
