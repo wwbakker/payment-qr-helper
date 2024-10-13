@@ -12,18 +12,18 @@ object Endpoints {
   private val svgStreamBody =
     streamBody(ZioStreams)(Schema.binary, Svg, None)
 
-  val index: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], Any with ZioStreams] =
+  val index: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
     endpoint
       .get
       .out(streamTextBody(ZioStreams)(CodecFormat.TextHtml(), None))
 
-  val mainJs: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], Any with ZioStreams] =
+  val mainJs: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
     endpoint
       .get
       .in("main.js")
       .out(streamTextBody(ZioStreams)(CodecFormat.TextJavascript(), None))
 
-  val mainJsMap: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], Any with ZioStreams] =
+  val mainJsMap: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
     endpoint
       .get
       .in("main.js.map")

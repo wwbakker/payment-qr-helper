@@ -2,25 +2,25 @@ import coursier.maven.MavenRepository
 import mill._, scalalib._, scalajslib._
 
 trait AppScalaModule extends ScalaModule {
-  def scalaVersion = "3.3.1"
+  def scalaVersion = "3.5.1"
 }
 
 trait AppScalaJSModule extends AppScalaModule with ScalaJSModule {
-  def scalaJSVersion = "1.15.0"
+  def scalaJSVersion = "1.17.0"
 }
 
 object api extends AppScalaModule {
   override def moduleDeps: Seq[JavaModule] = Seq(shared.jvm)
 
-  def zioCoreVersion = "2.0.19"
-  def zioHttpVersion = "3.0.0-RC4"
-  def zioJsonVersion = "0.6.2"
+  def zioCoreVersion = "2.1.11"
+  def zioHttpVersion = "3.0.1"
+  def zioJsonVersion = "0.7.3"
   override def ivyDeps = Agg(
     ivy"dev.zio::zio:$zioCoreVersion",
     ivy"dev.zio::zio-streams:$zioCoreVersion",
     ivy"dev.zio::zio-http:$zioHttpVersion",
     ivy"dev.zio::zio-json:$zioJsonVersion",
-    ivy"com.softwaremill.sttp.tapir::tapir-zio-http-server:1.9.6",
+    ivy"com.softwaremill.sttp.tapir::tapir-zio-http-server:1.11.7",
     ivy"com.github.kenglxn.QRGen:javase:3.0.1",
   )
 
@@ -45,7 +45,7 @@ object frontend extends AppScalaJSModule {
   override def moduleDeps: Seq[JavaModule] = Seq(shared.js)
 
   override def ivyDeps = Agg(
-    ivy"com.raquo::laminar::16.0.0",
+    ivy"com.raquo::laminar::17.1.0",
   )
 }
 

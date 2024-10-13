@@ -2,12 +2,12 @@ import zio.*
 import zio.stream.ZStream
 import sttp.tapir.server.ziohttp.ZioHttpInterpreter
 import sttp.tapir.ztapir.*
-import zio.http.{Server, HttpApp}
+import zio.http.{Response, Routes, Server}
 import Endpoints.*
 
 object ApiMain extends ZIOAppDefault:
 
-  private val app: HttpApp[Any] =
+  private val app: Routes[Any, Response] =
     ZioHttpInterpreter().toHttp(
       List(
         generateLoonbelastingQr.zServerLogic((betalingskenmerk, bedrag) =>
@@ -21,5 +21,6 @@ object ApiMain extends ZIOAppDefault:
 
 
   override val run: ZIO[ZIOAppArgs & Scope, Any, Any] =
-    ZIO.attemptBlockingIO(println(s"Application available at: http://localhost:8080")) *>
-      Server.serve(app).provide(Server.default)
+      ZIO.attemptBlockingIO(println(s"Application available at: http://localhost:8080")) *>
+        BrowserTrigger.openBrowser("http://localhost:8080").delay(1.seconds).forkDaemon *>
+          Server.serve(app).provide(Server.default)

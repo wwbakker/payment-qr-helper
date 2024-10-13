@@ -20,12 +20,11 @@ object LoonbelastingPage {
   }
 
   private val qrResponseStream: EventStream[Either[String, Blob]] =
-    for
-      betalingsKenmerk <- betalingskenmerk.signal
-      bedrag <- loonbelastingBedrag.signal
-      response <- FetchStream.withDecoder(qrResponseDecoder).get(s"/loonbelasting-qr.svg?bedrag=$bedrag&betalingskenmerk=$betalingsKenmerk")
-    yield response
-
+    betalingskenmerk.signal.flatMapSwitch(betalingsKenmerk =>
+      loonbelastingBedrag.signal.flatMapSwitch(loonbelastingBedrag =>
+        FetchStream.withDecoder(qrResponseDecoder).get(s"/loonbelasting-qr.svg?bedrag=$loonbelastingBedrag&betalingskenmerk=$betalingsKenmerk")
+      )
+    )
 
   private val imageOrError = qrResponseStream.map{
     case Right(blob) =>
