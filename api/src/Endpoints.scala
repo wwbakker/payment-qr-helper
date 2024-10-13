@@ -1,8 +1,11 @@
+import shared.ParseFromTextResponse
 import sttp.capabilities.zio.ZioStreams
 import sttp.model.{MediaType, StatusCode}
 import sttp.tapir.ztapir.*
 import sttp.tapir.{CodecFormat, Endpoint, Schema}
+import sttp.tapir.json.zio.*
 import zio.*
+import zio.json.{DeriveJsonCodec, JsonCodec}
 object Endpoints {
 
   case object Svg extends CodecFormat {
@@ -11,6 +14,9 @@ object Endpoints {
 
   private val svgStreamBody =
     streamBody(ZioStreams)(Schema.binary, Svg, None)
+    
+  private given JsonCodec[ParseFromTextResponse] = DeriveJsonCodec.gen
+  private given Schema[ParseFromTextResponse] = Schema.derived
 
   val index: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
     endpoint
@@ -38,5 +44,13 @@ object Endpoints {
       .out(svgStreamBody)
       .errorOut(stringBody)
       .name("loonbelasting-qr.svg")
-
+  
+  val parseEmailForAmountAndRef: Endpoint[Unit, String, String, ParseFromTextResponse, Any] =
+    endpoint
+      .put
+      .in("parse-email")
+      .in(stringBody)
+      .out(jsonBody[ParseFromTextResponse])
+      .errorOut(stringBody)
+      .name("parse-email")
 }

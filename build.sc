@@ -15,12 +15,14 @@ object api extends AppScalaModule {
   def zioCoreVersion = "2.1.11"
   def zioHttpVersion = "3.0.1"
   def zioJsonVersion = "0.7.3"
+  val tapirVersion = "1.11.7"
   override def ivyDeps = Agg(
     ivy"dev.zio::zio:$zioCoreVersion",
     ivy"dev.zio::zio-streams:$zioCoreVersion",
     ivy"dev.zio::zio-http:$zioHttpVersion",
     ivy"dev.zio::zio-json:$zioJsonVersion",
-    ivy"com.softwaremill.sttp.tapir::tapir-zio-http-server:1.11.7",
+    ivy"com.softwaremill.sttp.tapir::tapir-zio-http-server:$tapirVersion",
+    ivy"com.softwaremill.sttp.tapir::tapir-json-zio:$tapirVersion",
     ivy"com.github.kenglxn.QRGen:javase:3.0.1",
   )
 

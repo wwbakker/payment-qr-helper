@@ -13,6 +13,9 @@ object ApiMain extends ZIOAppDefault:
         generateLoonbelastingQr.zServerLogic((betalingskenmerk, bedrag) =>
           QrLogic.loonBelasting(bedrag, betalingskenmerk).mapBoth(e => e.friendlyText, ZStream.fromFile(_))
         ),
+        parseEmailForAmountAndRef.zServerLogic(email =>
+          QrLogic.parseFromText(email).mapBoth(e => e.friendlyText, identity)
+        ),
         mainJs.zServerLogic(_ => ZIO.succeed(ZStream.fromResource("webapp/main.js"))),
         mainJsMap.zServerLogic(_ => ZIO.succeed(ZStream.fromResource("webapp/main.js.map"))),
         index.zServerLogic(_ => ZIO.succeed(ZStream.fromResource("index.html")))

@@ -1,5 +1,6 @@
 import net.glxn.qrgen.javase.QRCode
 import net.glxn.qrgen.core.scheme.Girocode
+import shared.ParseFromTextResponse
 import zio.ZIO
 
 import java.io.File
@@ -21,6 +22,18 @@ object QrLogic {
   
   case class ParsedAmount(value: String)
   case class ParsedRef(value: String)
+
+
+  def parseFromText(s: String): ZIO[Any, ParseError, ParseFromTextResponse] =
+    val regexAmount = "€ (\\d+)".r
+    val regexRef = "(\\d{4}.\\d{4}.\\d{4}.\\d{4})".r
+
+    val amount = regexAmount.findFirstMatchIn(s).map(_.group(1))
+    val ref = regexRef.findFirstMatchIn(s).map(_.group(1))
+    (amount, ref) match
+      case (Some(a), Some(r)) => ZIO.succeed(ParseFromTextResponse(a, r))
+      case (None, _) => ZIO.fail(ParseError("Geen bedrag gevonden"))
+      case (_, None) => ZIO.fail(ParseError("Geen betalingskenmerk gevonden"))
 
   private def parseAmount(s: String): ZIO[Any, ParseError, ParsedAmount] =
     val regex = "^([0-9]{1,5})([.,][0-9]{0,2})?$".r
