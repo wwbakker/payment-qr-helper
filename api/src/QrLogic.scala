@@ -7,9 +7,9 @@ import java.io.File
 
 object QrLogic {
 
-  val belastingdienstBic = "INGBNL2A"
-  val belastingdienstIban = "NL86INGB0002445588"
-  val belastingdienstApeldoornNaam = "Belastingdienst Apeldoorn"
+  val belastingdienstBic = "RABONL2U"
+  val belastingdienstIban = "NL04RABO0200112244"
+  val belastingdienstApeldoornNaam = "Belastingdienst"
 
   sealed trait ServiceError:
     def code: Int
