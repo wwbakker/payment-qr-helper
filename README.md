@@ -6,7 +6,7 @@ Utility for creating QR codes for sending money to an IBAN account.
 Build using mill.
 
 To create a BSP setup, run (so you can run it in IntelliJ or other editor):
-`mill mill.bsp.BSP/install`
+`./mill --bsp-install`
 
 To run:
 `mill api.run`
