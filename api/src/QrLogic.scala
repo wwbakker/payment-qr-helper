@@ -35,7 +35,7 @@ object QrLogic {
       case (None, _) => ZIO.fail(ParseError("Geen bedrag gevonden"))
       case (_, None) => ZIO.fail(ParseError("Geen betalingskenmerk gevonden"))
 
-  private def parseAmount(s: String): ZIO[Any, ParseError, ParsedAmount] =
+  def parseAmount(s: String): ZIO[Any, ParseError, ParsedAmount] =
     val regex = "^([0-9]{1,5})([.,][0-9]{0,2})?$".r
     regex.findFirstMatchIn(s) match
       case None => ZIO.fail(ParseError("Bedrag is niet geldig"))
@@ -49,7 +49,7 @@ object QrLogic {
             ZIO.fail(ParseError("Inlezen bedrag ging fout"))
 
 
-  private def parseRef(s: String): ZIO[Any, ParseError, ParsedRef] =
+  def parseRef(s: String): ZIO[Any, ParseError, ParsedRef] =
     val digitsOnly = s.filter(_.isDigit)
     if digitsOnly.length == 4 * 4 then
       ZIO.succeed(ParsedRef(digitsOnly))

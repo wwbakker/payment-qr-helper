@@ -4,20 +4,20 @@ import coursier.maven.MavenRepository
 import mill.*, scalalib.*, scalajslib.*
 
 trait AppScalaModule extends ScalaModule {
-  def scalaVersion = "3.5.1"
+  def scalaVersion = "3.9.0"
 }
 
 trait AppScalaJSModule extends AppScalaModule, ScalaJSModule {
-  def scalaJSVersion = "1.17.0"
+  def scalaJSVersion = "1.22.0"
 }
 
 object api extends AppScalaModule {
   override def moduleDeps: Seq[JavaModule] = Seq(shared.jvm)
 
-  def zioCoreVersion = "2.1.11"
-  def zioHttpVersion = "3.0.1"
-  def zioJsonVersion = "0.7.3"
-  val tapirVersion = "1.11.7"
+  def zioCoreVersion = "2.1.26"
+  def zioHttpVersion = "3.11.6"
+  def zioJsonVersion = "1.1.0"
+  val tapirVersion = "1.13.31"
   override def mvnDeps = Seq(
     mvn"dev.zio::zio:$zioCoreVersion",
     mvn"dev.zio::zio-streams:$zioCoreVersion",
@@ -43,13 +43,18 @@ object api extends AppScalaModule {
     os.copy(jsPath / "main.js.map", Task.dest / "webapp" / "main.js.map")
     super.resources() ++ Seq(PathRef(Task.dest))
   }
+
+  object test extends ScalaTests, TestModule.ZioTest {
+    // zio-test is versioned in lockstep with zio itself
+    def zioTestVersion = zioCoreVersion
+  }
 }
 
 object frontend extends AppScalaJSModule {
   override def moduleDeps: Seq[JavaModule] = Seq(shared.js)
 
   override def mvnDeps = Seq(
-    mvn"com.raquo::laminar::17.1.0",
+    mvn"com.raquo::laminar::17.2.1",
   )
 }
 

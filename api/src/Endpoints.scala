@@ -1,4 +1,5 @@
 import shared.ParseFromTextResponse
+import sttp.capabilities.WebSockets
 import sttp.capabilities.zio.ZioStreams
 import sttp.model.{MediaType, StatusCode}
 import sttp.tapir.ztapir.*
@@ -18,24 +19,24 @@ object Endpoints {
   private given JsonCodec[ParseFromTextResponse] = DeriveJsonCodec.gen
   private given Schema[ParseFromTextResponse] = Schema.derived
 
-  val index: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
+  val index: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams & WebSockets] =
     endpoint
       .get
       .out(streamTextBody(ZioStreams)(CodecFormat.TextHtml(), None))
 
-  val mainJs: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
+  val mainJs: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams & WebSockets] =
     endpoint
       .get
       .in("main.js")
       .out(streamTextBody(ZioStreams)(CodecFormat.TextJavascript(), None))
 
-  val mainJsMap: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams] =
+  val mainJsMap: Endpoint[Unit, Unit, Unit, stream.Stream[Throwable, Byte], ZioStreams & WebSockets] =
     endpoint
       .get
       .in("main.js.map")
       .out(streamTextBody(ZioStreams)(CodecFormat.Json(), None))
 
-  val generateLoonbelastingQr: Endpoint[Unit, (String, String), String, stream.Stream[Throwable, Byte], ZioStreams] =
+  val generateLoonbelastingQr: Endpoint[Unit, (String, String), String, stream.Stream[Throwable, Byte], ZioStreams & WebSockets] =
     endpoint
       .get
       .in("loonbelasting-qr.svg")
